@@ -131,8 +131,8 @@ type CreateItemResponse struct {
 // https://plaid.com/docs/api/#item-management
 type Item struct {
 	AvailableProducts []string
-	BillProducts      []string
-	InstitutionID     string
-	ItemID            string
+	BilledProducts    []string
+	InstitutionID     string `json:"institution_id"`
+	ItemID            string `json:"item_id"`
 	Webhook           string `json:"webhook"`
 }

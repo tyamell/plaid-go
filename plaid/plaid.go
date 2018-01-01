@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -89,7 +88,7 @@ func (c *Client) addSecretToBody(body interface{}) ([]byte, error) {
 	authBody["client_id"] = c.clientID
 	authBody["secret"] = c.secret
 	jsonBody, err := json.Marshal(authBody)
-	fmt.Println(string(jsonBody))
+	// fmt.Println(string(jsonBody))
 	if err != nil {
 		return nil, err
 	}
@@ -116,9 +115,9 @@ func (c *Client) httpCall(method string, endpoint string, body []byte, responseS
 	if err != nil {
 		return err
 	}
-	fmt.Println()
-	fmt.Printf("Printing results for %s\n", string(c.environment)+endpoint)
-	fmt.Println(string(raw))
+	// fmt.Println()
+	// fmt.Printf("Printing results for %s\n", string(c.environment)+endpoint)
+	// fmt.Println(string(raw))
 
 	err = response.Body.Close()
 	if err != nil {
@@ -140,6 +139,6 @@ func (c *Client) httpCall(method string, endpoint string, body []byte, responseS
 			plaidErr.StatusCode = response.StatusCode
 			return plaidErr
 		}
-		return errors.New("Unknown Plaid Error - Status:" + string(response.StatusCode))
+		return errors.New("unknown Plaid Error - Status:" + string(response.StatusCode))
 	}
 }
