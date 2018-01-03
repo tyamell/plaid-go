@@ -58,9 +58,9 @@ type Transaction struct {
 	CategoryID           string   `json:"category_id"`
 	TransactionType      string   `json:"transaction_type"`
 	Amount               float64
-	Date                 string
-	Location             Location
-	PaymentMetadata      PaymentMetadata `json:"payment_meta"`
+	Date                 *time.Time
+	Location             *Location
+	PaymentMetadata      *PaymentMetadata `json:"payment_meta"`
 	Pending              bool
 	PendingTransactionID string `json:"pending_transaction_id"`
 	AccountOwner         string `json:"account_owner"`
