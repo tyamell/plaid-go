@@ -59,7 +59,7 @@ type Account struct {
 	Mask           string
 	ItemID         string `json:"item_id"`
 	InstitutionID  string `json:"institution_id"`
-	SubAccountType string `json:"sub_type"`
+	SubAccountType string `json:"subtype"`
 	Balance        struct {
 		Available float64 `json:"available"`
 		Current   float64 `json:"current"`
