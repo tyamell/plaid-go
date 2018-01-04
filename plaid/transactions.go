@@ -87,4 +87,5 @@ type PaymentMetadata struct {
 	PaymentMethod          string `json:"payment_method"`
 	PaymentProcessor       string `json:"payment_processor"`
 	Reason                 string `json:"reason"`
+	ByOrderOf              string `json:"by_order_of"`
 }
