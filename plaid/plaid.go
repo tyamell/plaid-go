@@ -64,7 +64,7 @@ type Account struct {
 		Available float64 `json:"available"`
 		Current   float64 `json:"current"`
 		Limit     float64 `json:"limit"`
-	} `json:"balance"`
+	} `json:"balances"`
 }
 
 func (c *Client) post(endpoint string, body interface{}, responseStructure interface{}) error {
