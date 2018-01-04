@@ -83,4 +83,8 @@ type PaymentMetadata struct {
 	ReferenceNumber        string `json:"reference_number"`
 	PaymentProcessorDataID string `json:"ppd_id"`
 	PayeeName              string `json:"payee_name"`
+	Payer                  string `json:"payer"`
+	PaymentMethod          string `json:"payment_method"`
+	PaymentProcessor       string `json:"payment_processor"`
+	Reason                 string `json:"reason"`
 }
