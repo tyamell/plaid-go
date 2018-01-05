@@ -14,7 +14,7 @@ func (c *Client) GetBalance(accessToken string) (res *GetBalanceResponse, err er
 	}
 
 	var response GetBalanceResponse
-	err = c.post("/accounts/balance/get ", request, &response)
+	err = c.post("/accounts/balance/get", request, &response)
 	return &response, err
 }
 
