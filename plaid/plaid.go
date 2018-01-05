@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -133,6 +134,7 @@ func (c *Client) httpCall(method string, endpoint string, body []byte, responseS
 	default:
 		if response.StatusCode >= 400 {
 			var plaidErr plaidError
+			fmt.Println(string(raw))
 			if err = json.Unmarshal(raw, &plaidErr); err != nil {
 				return err
 			}
