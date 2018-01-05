@@ -8,7 +8,7 @@ package plaid
 // access token. Transactions are provided within the range of Start Date and End Date, by default
 // count is 250 and offset is 0.
 func (c *Client) GetBalance(accessToken string) (res *GetBalanceResponse, err error) {
-	request := getTransactionsRequest{
+	request := getBalanceRequest{
 		AccessToken: accessToken,
 		AccountIds:  nil,
 	}
