@@ -10,7 +10,9 @@ package plaid
 func (c *Client) GetBalance(accessToken string) (res *GetBalanceResponse, err error) {
 	request := getBalanceRequest{
 		AccessToken: accessToken,
-		AccountIds:  nil,
+		Options: {
+			AccountIds: nil,
+		},
 	}
 
 	var response GetBalanceResponse
