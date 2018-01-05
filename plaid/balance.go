@@ -19,8 +19,10 @@ func (c *Client) GetBalance(accessToken string) (res *GetBalanceResponse, err er
 }
 
 type getBalanceRequest struct {
-	AccessToken string   `json:"access_token"`
-	AccountIds  []string `json:"account_ids"`
+	AccessToken string `json:"access_token"`
+	Options     struct {
+		AccountIds []string `json:"account_ids,omitempty"`
+	} `json:"options, omitempty"`
 }
 
 // GetTransactionsResponse represents the response from GetTransactions
