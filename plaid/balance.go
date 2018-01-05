@@ -10,7 +10,7 @@ package plaid
 func (c *Client) GetBalance(accessToken string) (res *GetBalanceResponse, err error) {
 	request := getBalanceRequest{
 		AccessToken: accessToken,
-		Options: {
+		Options: accountIdsStruct{
 			AccountIds: nil,
 		},
 	}
@@ -20,11 +20,13 @@ func (c *Client) GetBalance(accessToken string) (res *GetBalanceResponse, err er
 	return &response, err
 }
 
+type accountIdsStruct struct {
+	AccountIds []string `json:"account_ids,omitempty"`
+}
+
 type getBalanceRequest struct {
-	AccessToken string `json:"access_token"`
-	Options     struct {
-		AccountIds []string `json:"account_ids,omitempty"`
-	} `json:"options, omitempty"`
+	AccessToken string           `json:"access_token"`
+	Options     accountIdsStruct `json:"options, omitempty"`
 }
 
 // GetTransactionsResponse represents the response from GetTransactions
