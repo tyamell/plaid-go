@@ -57,6 +57,7 @@ type Transaction struct {
 	Categories           []string `json:"category"`
 	CategoryID           string   `json:"category_id"`
 	TransactionType      string   `json:"transaction_type"`
+	Name                 string
 	Amount               float64
 	Date                 *PlaidTime
 	Location             *Location
