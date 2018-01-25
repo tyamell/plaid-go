@@ -1,6 +1,9 @@
 package plaid
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 // GetTransactions returns the accounts and transactions associated with the provided
 // access token. Transactions are provided within the range of Start Date and End Date, by default
@@ -19,6 +22,7 @@ func (c *Client) GetTransactions(accessToken string, startDate time.Time,
 
 	var response GetTransactionsResponse
 	err = c.post("/transactions/get", request, &response)
+	fmt.Println(response)
 	return &response, err
 }
 
