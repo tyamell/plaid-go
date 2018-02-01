@@ -34,7 +34,7 @@ type Client struct {
 	httpClient  *http.Client
 }
 
-type environmentURL string
+type EnvironmentURL string
 
 // Sandbox is the URL for the Sandbox environment at Plaid
 // Use this for integration tests
