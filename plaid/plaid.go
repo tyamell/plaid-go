@@ -12,13 +12,13 @@ import (
 
 // NewClient instantiates a Client associated with a client id, secret and environment.
 // See https://plaid.com/docs/api/#gaining-access.
-func NewClient(clientID string, secret string, environment environmentURL) *Client {
+func NewClient(clientID string, secret string, environment EnvironmentURL) *Client {
 	return &Client{clientID, secret, environment, &http.Client{}}
 }
 
 // NewCustomClient is the as above but with additional parameter to pass http.Client. This is required
 // if you want to run the code on Google AppEngine which prohibits use of http.DefaultClient
-func NewCustomClient(clientID string, secret string, environment environmentURL,
+func NewCustomClient(clientID string, secret string, environment EnvironmentURL,
 	httpClient *http.Client) *Client {
 	return &Client{clientID, secret, environment, httpClient}
 }
@@ -30,7 +30,7 @@ func NewCustomClient(clientID string, secret string, environment environmentURL,
 type Client struct {
 	clientID    string
 	secret      string
-	environment environmentURL
+	environment EnvironmentURL
 	httpClient  *http.Client
 }
 
@@ -38,15 +38,15 @@ type EnvironmentURL string
 
 // Sandbox is the URL for the Sandbox environment at Plaid
 // Use this for integration tests
-var Sandbox environmentURL = "https://sandbox.plaid.com"
+var Sandbox EnvironmentURL = "https://sandbox.plaid.com"
 
 // Development is the URL for the Development environment at Plaid
 // Use this for while developing your application
-var Development environmentURL = "https://development.plaid.com"
+var Development EnvironmentURL = "https://development.plaid.com"
 
 // Production is the URL for the Production environment at Plaid
 // Use this when you application is deployed to production
-var Production environmentURL = "https://api.plaid.com"
+var Production EnvironmentURL = "https://api.plaid.com"
 
 // Account resprests the account data in the Plaid system
 // TODO make AccountType and SubAccountType enums

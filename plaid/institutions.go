@@ -11,7 +11,7 @@ package plaid
 
 // // GetInstitution returns information for a single institution given an ID.
 // // See: https://plaid.com/docs/api/#institutions-by-id
-// func GetInstitution(environment environmentURL, id string) (inst institution, err error) {
+// func GetInstitution(environment EnvironmentURL, id string) (inst institution, err error) {
 // 	if id == "" {
 // 		return inst, errors.New("/institutions/all/:id - institution id must be specified")
 // 	}
@@ -24,7 +24,7 @@ package plaid
 // // If product parameter is included, results are filtered by product.
 // // If institution id option is specified, query and product parameters are ignored.
 // // See: https://plaid.com/docs/api/#institution-search
-// func GetInstitutionsSearch(environment environmentURL, query, product, id string) (institutions []institutionExtended, err error) {
+// func GetInstitutionsSearch(environment EnvironmentURL, query, product, id string) (institutions []institutionExtended, err error) {
 // 	if query == "" && id == "" {
 // 		return nil, errors.New("/institutions/all/ - query or institution id must be specified")
 // 	}
@@ -48,7 +48,7 @@ package plaid
 // // Returns all financial institutions currently supported by Plaid.
 // // If not specified, count defaults to 50.
 // // See: https://plaid.com/docs/api/#all-institutions
-// func (c *Client) GetInstitutions(environment environmentURL, products []string, count int, offset int) (institutions []institution, err error) {
+// func (c *Client) GetInstitutions(environment EnvironmentURL, products []string, count int, offset int) (institutions []institution, err error) {
 // 	// Default to count=50.
 // 	if count == 0 {
 // 		count = 50

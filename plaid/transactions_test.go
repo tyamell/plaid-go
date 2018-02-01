@@ -23,7 +23,7 @@ func TestGetTransactions(t *testing.T) {
 		fmt.Fprintln(w, string(b))
 	}))
 	defer ts.Close()
-	var testBed environmentURL = environmentURL(ts.URL)
+	var testBed EnvironmentURL = EnvironmentURL(ts.URL)
 
 	client := NewCustomClient("foo", "bar", testBed, ts.Client())
 
