@@ -14,6 +14,6 @@ type plaidError struct {
 }
 
 func (e plaidError) Error() string {
-	return fmt.Sprintf("Plaid Error - http status: %d, code: %d, message: %s, type: %s",
+	return fmt.Sprintf("Plaid Error - http status: %d, code: %s, message: %s, type: %s",
 		e.StatusCode, e.ErrorCode, e.Message, e.ErrorType)
 }

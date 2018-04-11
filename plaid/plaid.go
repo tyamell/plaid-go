@@ -120,9 +120,6 @@ func (c *Client) httpCall(method string, endpoint string, body []byte, responseS
 	fmt.Println(string(raw))
 	fmt.Println()
 
-	// fmt.Printf("Printing results for %s\n", string(c.environment)+endpoint)
-	// fmt.Println(string(raw))
-
 	err = response.Body.Close()
 	if err != nil {
 		return err
