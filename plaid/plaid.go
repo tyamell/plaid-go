@@ -89,7 +89,6 @@ func (c *Client) addSecretToBody(body interface{}) ([]byte, error) {
 	authBody["client_id"] = c.clientID
 	authBody["secret"] = c.secret
 	jsonBody, err := json.Marshal(authBody)
-	// fmt.Println(string(jsonBody))
 	if err != nil {
 		return nil, err
 	}
@@ -116,9 +115,6 @@ func (c *Client) httpCall(method string, endpoint string, body []byte, responseS
 	if err != nil {
 		return err
 	}
-	fmt.Println()
-	fmt.Println(string(raw))
-	fmt.Println()
 
 	err = response.Body.Close()
 	if err != nil {
