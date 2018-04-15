@@ -96,15 +96,17 @@ type GetInstitutionResponse struct {
 	RequestID   string      `json:"request_id"`
 }
 
+type InstitutionCredentials struct {
+	Label string `json:"label"` // e.g.: "Password"
+	Name  string `json:"name"`  // e.g.: "PIN"
+	Type  string `json:"type"`  // e.g.: "Online ID"
+}
+
 type Institution struct {
-	Credentials struct {
-		Label string `json:"label"` // e.g.: "Password"
-		Name  string `json:"name"`  // e.g.: "PIN"
-		Type  string `json:"type"`  // e.g.: "Online ID"
-	} `json:"credentials"`
-	Name     string   `json:"name"`           // e.g.: "Bank of America"
-	HasMFA   bool     `json:"has_mfa"`        // e.g.: true
-	ID       string   `json:"institution_id"` // e.g.: "5301a93ac140de84910000e0"
-	MFA      []string `json:"mfa"`            // e.g.: ["code", "list", "questions"]
-	Products []string `json:"products"`       // e.g.: ["connect", "auth", "balance"]
+	Credentials []InstitutionCredentials `json:"credentials"`
+	Name        string                   `json:"name"`           // e.g.: "Bank of America"
+	HasMFA      bool                     `json:"has_mfa"`        // e.g.: true
+	ID          string                   `json:"institution_id"` // e.g.: "5301a93ac140de84910000e0"
+	MFA         []string                 `json:"mfa"`            // e.g.: ["code", "list", "questions"]
+	Products    []string                 `json:"products"`       // e.g.: ["connect", "auth", "balance"]
 }
