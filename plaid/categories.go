@@ -5,7 +5,7 @@ import "github.com/pkg/errors"
 // GetCategories returns detailed information on categories returned by Plaid.
 func (c *Client) GetCategories() (*GetCategoriesResponse, error) {
 	var response GetCategoriesResponse
-	err := c.PublicPost("/categories/get", nil, &response)
+	err := c.PublicPost("/categories/get", []byte("{}"), &response)
 	return &response, errors.Wrap(err, "error calling /categories/get")
 }
 
