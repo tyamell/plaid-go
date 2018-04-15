@@ -1,9 +1,11 @@
-hash: 035f00e0c4bc4f16656606080b8b14e184e50f0dbf6d58f975f5ac36370ce4e4
-updated: 2018-02-04T00:00:49.484864-08:00
-imports: []
+hash: b06ad2c705179190105afff49d02ed70d9a518f7b8ffc4bc57056c0ae7096123
+updated: 2018-04-14T20:12:39.080556-07:00
+imports:
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
 testImports:
 - name: github.com/davecgh/go-spew
-  version: 87df7c60d5820d0f8ae11afede5aa52325c09717
+  version: 8991bc29aa16c548c550c7ff78260e27b9ab7c73
   subpackages:
   - spew
 - name: github.com/onsi/ginkgo

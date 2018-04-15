@@ -1,21 +1,21 @@
 package plaid
 
-// // GetCategories returns information for all categories.
-// // See https://plaid.com/docs/api/#category-overview.
-// func GetCategories(environment EnvironmentURL) (categories []category, err error) {
-// 	err = getAndUnmarshal(environment, "/categories", &categories)
-// 	return
-// }
+import "github.com/pkg/errors"
 
-// // GetCategory returns information for a single category given an ID.
-// // See https://plaid.com/docs/api/#categories-by-id.
-// func GetCategory(environment EnvironmentURL, id string) (cat category, err error) {
-// 	err = getAndUnmarshal(environment, "/categories/"+id, &cat)
-// 	return
-// }
+// GetCategories returns detailed information on categories returned by Plaid.
+func (c *Client) GetCategories() (*GetCategoriesResponse, error) {
+	var response GetCategoriesResponse
+	err := c.PublicPost("/categories/get", nil, &response)
+	return &response, errors.Wrap(err, "error calling /categories/get")
+}
 
-// type category struct {
-// 	Hierarchy []string `json:"hierarchy"` // e.g.: ["Food and Drink", "Bar"]
-// 	ID        string   `json:"id"`        // e.g.: "13001000"
-// 	Type      string   `json:"type"`      // e.g.: "place"
-// }
+type GetCategoriesResponse struct {
+	Categories []Category `json:"hierarchy"`
+	RequestID  string     `json:"request_id"`
+}
+
+type Category struct {
+	Hierarchy  []string `json:"hierarchy"`
+	Group      string   `json:"group"`
+	CategoryID string   `json:"category_id"`
+}

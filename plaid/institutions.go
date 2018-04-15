@@ -1,5 +1,9 @@
 package plaid
 
+import (
+	"github.com/pkg/errors"
+)
+
 // import (
 // 	"bytes"
 // 	"encoding/json"
@@ -9,154 +13,98 @@ package plaid
 // 	"net/url"
 // )
 
-// // GetInstitution returns information for a single institution given an ID.
-// // See: https://plaid.com/docs/api/#institutions-by-id
-// func GetInstitution(environment EnvironmentURL, id string) (inst institution, err error) {
-// 	if id == "" {
-// 		return inst, errors.New("/institutions/all/:id - institution id must be specified")
-// 	}
+// GetInstitution returns information for a single institution given an ID.
+func (c *Client) GetInstitution(id string) (*GetInstitutionResponse, error) {
+	if id == "" {
+		return nil, errors.New("institution id must be specified")
+	}
 
-// 	err = getAndUnmarshal(environment, "/institutions/all/"+id, &inst)
-// 	return inst, err
-// }
+	request := getInstitutionRequest{
+		InstitutionID: id,
+	}
 
-// // GetInstitutionsSearch returns all institutions that match the query parameters.
-// // If product parameter is included, results are filtered by product.
-// // If institution id option is specified, query and product parameters are ignored.
-// // See: https://plaid.com/docs/api/#institution-search
-// func GetInstitutionsSearch(environment EnvironmentURL, query, product, id string) (institutions []institutionExtended, err error) {
-// 	if query == "" && id == "" {
-// 		return nil, errors.New("/institutions/all/ - query or institution id must be specified")
-// 	}
+	var response GetInstitutionResponse
+	err := c.post("/institutions/get_by_id", request, &response)
+	return &response, errors.Wrap(err, "error calling /institutions/get_by_id")
+}
 
-// 	v := url.Values{}
+// GetAllInstitutions returns all institutions based on the product array provided. A nil product
+// will return all institutions
+func (c *Client) GetAllInstitutions(count, offset int, products []string) (*GetAllInstitutionResponse, error) {
+	if count > 500 {
+		return nil, errors.New("count must be less than or equal to 500")
+	}
+	request := getAllInstitutionsRequest{
+		Count:  count,
+		Offset: offset,
+	}
+	if products != nil {
+		request.Options.Products = products
+	}
+	var response GetAllInstitutionResponse
+	err := c.post("/institutions/get", request, &response)
+	return &response, errors.Wrap(err, "error calling /institutions/get")
+}
 
-// 	if query != "" {
-// 		v.Add("q", query)
-// 	}
-// 	if product != "" {
-// 		v.Add("p", product)
-// 	}
-// 	if id != "" {
-// 		v.Add("id", id)
-// 	}
+// SearchInstitutions returns details for all institutions that match the query parameters.
+// Use the product parameter to filter the Institutions based on whether they support all products listed in products.
+// Provide nil to get institutions regardless of supported products.
+func (c *Client) SearchInstitutions(query string, products []string) (*SearchInstitutionResponse, error) {
+	if query == "" {
+		return nil, errors.New("a query must be provided")
+	}
 
-// 	err = getAndUnmarshal(environment, "/institutions/all/search?"+v.Encode(), &institutions)
-// 	return
-// }
+	request := searchInstitutionRequest{
+		Query:    query,
+		Products: products,
+	}
+	var response SearchInstitutionResponse
+	err := c.post("/institutions/search", request, &response)
+	return &response, errors.Wrap(err, "error calling /institutions/search")
+}
 
-// // Returns all financial institutions currently supported by Plaid.
-// // If not specified, count defaults to 50.
-// // See: https://plaid.com/docs/api/#all-institutions
-// func (c *Client) GetInstitutions(environment EnvironmentURL, products []string, count int, offset int) (institutions []institution, err error) {
-// 	// Default to count=50.
-// 	if count == 0 {
-// 		count = 50
-// 	}
+type searchInstitutionRequest struct {
+	Query    string   `json:"query"`
+	Products []string `json:"products"`
+}
 
-// 	jsonText, err := json.Marshal(institutionsJson{
-// 		ClientID: c.clientID,
-// 		Secret:   c.secret,
-// 		Products: products,
-// 		Count:    count,
-// 		Offset:   offset,
-// 	})
-// 	if err != nil {
-// 		return nil, err
-// 	}
+type getInstitutionRequest struct {
+	InstitutionID string `json:"institution_id"`
+}
 
-// 	req, err := http.NewRequest("POST", string(c.environment)+"/institutions/all", bytes.NewReader(jsonText))
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	req.Header.Add("Content-Type", "application/json")
-// 	req.Header.Add("User-Agent", "plaid-go")
+type getAllInstitutionsRequest struct {
+	Count   int `json:"count"`
+	Offset  int `json:"offset"`
+	Options struct {
+		Products []string `json:"products"`
+	} `json:"options"`
+}
 
-// 	res, err := c.httpClient.Do(req)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+type SearchInstitutionResponse struct {
+	Institutions []Institution `json:"institutions"`
+	RequestID    string        `json:"request_id"`
+}
 
-// 	raw, err := ioutil.ReadAll(res.Body)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer res.Body.Close()
+type GetAllInstitutionResponse struct {
+	Institutions []Institution `json:"institutions"`
+	Total        int           `json:"total"`
+	RequestID    string        `json:"request_id"`
+}
 
-// 	switch {
-// 	case res.StatusCode == 200:
-// 		// Successful response.
-// 		var institutionsJsonResp allInstitutionsJson
-// 		if err = json.Unmarshal(raw, &institutionsJsonResp); err != nil {
-// 			return nil, err
-// 		}
-// 		return institutionsJsonResp.Results, nil
-// 	case res.StatusCode >= 400:
-// 		// Attempt to unmarshal into Plaid error format
-// 		var plaidErr plaidError
-// 		if err = json.Unmarshal(raw, &plaidErr); err != nil {
-// 			return nil, err
-// 		}
-// 		plaidErr.StatusCode = res.StatusCode
-// 		return nil, plaidErr
-// 	}
+type GetInstitutionResponse struct {
+	Institution Institution `json:"institution"`
+	RequestID   string      `json:"request_id"`
+}
 
-// 	return nil, errors.New("Unknown Plaid Error - Status:" + string(res.StatusCode))
-// }
-
-// type allInstitutionsJson struct {
-// 	TotalCount int           `json:"total_count"`
-// 	Results    []institution `json:"results"`
-// }
-
-// type institutionsJson struct {
-// 	ClientID string   `json:"client_id"`
-// 	Secret   string   `json:"secret"`
-// 	Products []string `json:"products"` // e.g. ["connect", "auth", "info", "income", "risk"]
-// 	Count    int      `json:"count"`
-// 	Offset   int      `json:"offset"`
-// }
-
-// type institutionExtended struct {
-// 	ID       string `json:"id"`
-// 	Name     string `json:"name"`
-// 	Products struct {
-// 		Auth    bool `json:"auth"`
-// 		Balance bool `json:"balance"`
-// 		Connect bool `json:"connect"`
-// 		Info    bool `json:"info"`
-// 	} `json:"products"`
-// 	ForgottenPassword string `json:"forgottenPassword"`
-// 	AccountLocked     string `json:"accountLocked"`
-// 	AccountSetup      string `json:"accountSetup"`
-// 	Video             string `json:"video"`
-// 	Fields            []struct {
-// 		Name  string `json:"name"`
-// 		Label string `json:"label"`
-// 		Type  string `json:"type"`
-// 	} `json:"fields"`
-// 	Colors struct {
-// 		Light    string   `json:"light"`
-// 		Primary  string   `json:"primary"`
-// 		Dark     string   `json:"dark"`
-// 		Darker   string   `json:"darker"`
-// 		Gradient []string `json:"gradient"`
-// 	} `json:"colors"`
-// 	Logo      string `json:"logo"`
-// 	Namebreak int    `json:"nameBreak"`
-// 	Type      string `json:"type"`
-// }
-
-// type institution struct {
-// 	Credentials struct {
-// 		Password string `json:"password"` // e.g.: "Password"
-// 		PIN      string `json:"pin"`      // e.g.: "PIN"
-// 		Username string `json:"username"` // e.g.: "Online ID"
-// 	}
-// 	Name     string   `json:"name"`     // e.g.: "Bank of America"
-// 	HasMFA   bool     `json:"has_mfa"`  // e.g.: true
-// 	ID       string   `json:"id"`       // e.g.: "5301a93ac140de84910000e0"
-// 	MFA      []string `json:"mfa"`      // e.g.: ["code", "list", "questions"]
-// 	Products []string `json:"products"` // e.g.: ["connect", "auth", "balance"]
-// 	Type     string   `json:"type"`     // e.g.: "bofa"
-// }
+type Institution struct {
+	Credentials struct {
+		Label string `json:"label"` // e.g.: "Password"
+		Name  string `json:"name"`  // e.g.: "PIN"
+		Type  string `json:"type"`  // e.g.: "Online ID"
+	} `json:"credentials"`
+	Name     string   `json:"name"`           // e.g.: "Bank of America"
+	HasMFA   bool     `json:"has_mfa"`        // e.g.: true
+	ID       string   `json:"institution_id"` // e.g.: "5301a93ac140de84910000e0"
+	MFA      []string `json:"mfa"`            // e.g.: ["code", "list", "questions"]
+	Products []string `json:"products"`       // e.g.: ["connect", "auth", "balance"]
+}
