@@ -24,7 +24,7 @@ func (c *Client) GetInstitution(id string) (*GetInstitutionResponse, error) {
 	}
 
 	var response GetInstitutionResponse
-	err := c.post("/institutions/get_by_id", request, &response)
+	err := c.postPublic("/institutions/get_by_id", request, &response)
 	return &response, errors.Wrap(err, "error calling /institutions/get_by_id")
 }
 
@@ -42,7 +42,7 @@ func (c *Client) GetAllInstitutions(count, offset int, products []string) (*GetA
 		request.Options.Products = products
 	}
 	var response GetAllInstitutionResponse
-	err := c.post("/institutions/get", request, &response)
+	err := c.postPublic("/institutions/get", request, &response)
 	return &response, errors.Wrap(err, "error calling /institutions/get")
 }
 
@@ -59,7 +59,7 @@ func (c *Client) SearchInstitutions(query string, products []string) (*SearchIns
 		Products: products,
 	}
 	var response SearchInstitutionResponse
-	err := c.post("/institutions/search", request, &response)
+	err := c.postPublic("/institutions/search", request, &response)
 	return &response, errors.Wrap(err, "error calling /institutions/search")
 }
 

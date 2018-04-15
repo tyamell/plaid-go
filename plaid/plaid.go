@@ -12,15 +12,15 @@ import (
 
 // NewClient instantiates a Client associated with a client id, secret and environment.
 // See https://plaid.com/docs/api/#gaining-access.
-func NewClient(clientID string, secret string, environment EnvironmentURL) *Client {
-	return &Client{clientID, secret, environment, &http.Client{}}
+func NewClient(clientID, publicKey, secret string, environment EnvironmentURL) *Client {
+	return &Client{clientID, publicKey, secret, environment, &http.Client{}}
 }
 
 // NewCustomClient is the as above but with additional parameter to pass http.Client. This is required
 // if you want to run the code on Google AppEngine which prohibits use of http.DefaultClient
-func NewCustomClient(clientID string, secret string, environment EnvironmentURL,
+func NewCustomClient(clientID, publicKey, secret string, environment EnvironmentURL,
 	httpClient *http.Client) *Client {
-	return &Client{clientID, secret, environment, httpClient}
+	return &Client{clientID, publicKey, secret, environment, httpClient}
 }
 
 // Client is only exported for method documentation purposes.
@@ -29,6 +29,7 @@ func NewCustomClient(clientID string, secret string, environment EnvironmentURL,
 // See https://github.com/golang/go/issues/7823.
 type Client struct {
 	clientID    string
+	publicKey   string
 	secret      string
 	environment EnvironmentURL
 	httpClient  *http.Client
@@ -74,6 +75,32 @@ func (c *Client) post(endpoint string, body interface{}, responseStructure inter
 		return nil
 	}
 	return c.httpCall(http.MethodPost, endpoint, bodyBytes, &responseStructure)
+}
+
+func (c *Client) postPublic(endpoint string, body interface{}, responseStructure interface{}) error {
+	bodyBytes, err := c.addPublicKey(body)
+	if err != nil {
+		return nil
+	}
+	return c.httpCall(http.MethodPost, endpoint, bodyBytes, &responseStructure)
+}
+
+func (c *Client) addPublicKey(body interface{}) ([]byte, error) {
+	authBody := map[string]interface{}{}
+	bodyString, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(bodyString, &authBody)
+	if err != nil {
+		return nil, err
+	}
+	authBody["public_key"] = c.publicKey
+	jsonBody, err := json.Marshal(authBody)
+	if err != nil {
+		return nil, err
+	}
+	return jsonBody, nil
 }
 
 func (c *Client) addSecretToBody(body interface{}) ([]byte, error) {
