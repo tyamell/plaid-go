@@ -10,7 +10,7 @@ func (c *Client) GetCategories() (*GetCategoriesResponse, error) {
 }
 
 type GetCategoriesResponse struct {
-	Categories []Category `json:"hierarchy"`
+	Categories []Category `json:"categories"`
 	RequestID  string     `json:"request_id"`
 }
 
