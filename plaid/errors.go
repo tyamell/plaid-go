@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-type plaidError struct {
+type PlaidError struct {
 	ErrorCode string `json:"error_code"`
 	Message   string `json:"error_message"`
 	ErrorType string `json:"error_type"`
@@ -13,7 +13,7 @@ type plaidError struct {
 	StatusCode int
 }
 
-func (e plaidError) Error() string {
+func (e PlaidError) Error() string {
 	return fmt.Sprintf("Plaid Error - http status: %d, code: %s, message: %s, type: %s",
 		e.StatusCode, e.ErrorCode, e.Message, e.ErrorType)
 }
